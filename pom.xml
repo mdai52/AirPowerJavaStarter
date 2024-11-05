@@ -5,7 +5,7 @@
     <parent>
         <groupId>cn.hamm</groupId>
         <artifactId>airpower</artifactId>
-        <version>2.3.4</version>
+        <version>2.4.2</version>
     </parent>
     <groupId>cn.hamm.demo</groupId>
     <artifactId>airpower-java-starter</artifactId>
@@ -16,7 +16,6 @@
         <dependency>
             <groupId>cn.hamm</groupId>
             <artifactId>airpower-core</artifactId>
-            <version>${airpower.version}</version>
         </dependency>
     </dependencies>
     <build>

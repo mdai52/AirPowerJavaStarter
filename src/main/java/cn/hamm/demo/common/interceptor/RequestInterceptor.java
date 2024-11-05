@@ -2,9 +2,12 @@ package cn.hamm.demo.common.interceptor;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.config.Constant;
-import cn.hamm.airpower.enums.ServiceError;
+import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.airpower.interceptor.AbstractRequestInterceptor;
+import cn.hamm.airpower.util.AccessTokenUtil;
+import cn.hamm.airpower.util.PermissionUtil;
 import cn.hamm.airpower.util.ReflectUtil;
+import cn.hamm.airpower.util.RequestUtil;
 import cn.hamm.demo.common.annotation.DisableLog;
 import cn.hamm.demo.common.config.AppConstant;
 import cn.hamm.demo.module.system.log.LogEntity;
@@ -35,9 +38,6 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
     static final String LOG_ID = "logId";
 
     @Autowired
-    private ReflectUtil reflectUtil;
-
-    @Autowired
     private UserService userService;
 
     @Autowired
@@ -55,7 +55,7 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
      * @apiNote 抛出异常则为拦截
      */
     @Override
-    protected void checkUserPermission(Long userId, String permissionIdentity, HttpServletRequest request) {
+    protected void checkUserPermission(long userId, String permissionIdentity, HttpServletRequest request) {
         UserEntity existUser = userService.get(userId);
         if (existUser.isRootUser()) {
             return;
@@ -84,7 +84,7 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
      */
     @Override
     protected void interceptRequest(HttpServletRequest request, HttpServletResponse response, Class<?> clazz, Method method) {
-        DisableLog disableLog = reflectUtil.getAnnotation(DisableLog.class, method);
+        DisableLog disableLog = ReflectUtil.getAnnotation(DisableLog.class, method);
         if (Objects.nonNull(disableLog)) {
             return;
         }
@@ -94,7 +94,7 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
         String platform = Constant.EMPTY_STRING;
         String action = request.getRequestURI();
         try {
-            userId = securityUtil.getIdFromAccessToken(accessToken);
+            userId = AccessTokenUtil.create().getPayloadId(accessToken, serviceConfig.getAccessTokenSecret());
             platform = request.getHeader(AppConstant.APP_PLATFORM_HEADER);
             Description description = method.getAnnotation(Description.class);
             if (Objects.nonNull(description) && StringUtils.hasText(description.value())) {
@@ -102,13 +102,13 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
             }
         } catch (Exception ignored) {
         }
-        String identity = accessUtil.getPermissionIdentity(clazz, method);
+        String identity = PermissionUtil.getPermissionIdentity(clazz, method);
         PermissionEntity permissionEntity = permissionService.getPermissionByIdentity(identity);
         if (Objects.nonNull(permissionEntity)) {
             action = permissionEntity.getName();
         }
         long logId = logService.add(new LogEntity()
-                .setIp(requestUtil.getIpAddress(request))
+                .setIp(RequestUtil.getIpAddress(request))
                 .setAction(action)
                 .setPlatform(platform)
                 .setRequest(getRequestBody(request))
