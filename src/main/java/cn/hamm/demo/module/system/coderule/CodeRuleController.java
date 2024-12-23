@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
  *
  * @author Hamm.cn
  */
-@ApiController("system/coderule")
+@ApiController("coderule")
 @Description("编码规则")
 public class CodeRuleController extends BaseController<CodeRuleEntity, CodeRuleService, CodeRuleRepository> {
     @Description("获取支持的表")
