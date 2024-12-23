@@ -1,7 +1,7 @@
 package cn.hamm.demo.module.open.oauth.model.base;
 
 import cn.hamm.airpower.root.RootModel;
-import cn.hamm.demo.module.user.enums.UserGender;
+import cn.hamm.demo.module.user.common.enums.UserGender;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;

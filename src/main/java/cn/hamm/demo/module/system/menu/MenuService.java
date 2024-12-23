@@ -68,6 +68,9 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
         secondMenu = new MenuEntity().setName("角色管理").setPath("/console/role/list").setParentId(firstMenu.getId());
         add(secondMenu);
 
+        secondMenu = new MenuEntity().setName("部门管理").setPath("/console/department/list").setParentId(firstMenu.getId());
+        add(secondMenu);
+
         // 开放能力
         firstMenu = new MenuEntity().setName("开放能力").setOrderNo(10).setParentId(0L);
         firstMenu = get(add(firstMenu));

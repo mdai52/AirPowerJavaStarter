@@ -3,12 +3,13 @@ package cn.hamm.demo.common;
 import cn.hamm.demo.common.config.AppConfig;
 import cn.hamm.demo.module.open.app.OpenAppService;
 import cn.hamm.demo.module.open.log.OpenLogService;
-import cn.hamm.demo.module.role.RoleService;
+import cn.hamm.demo.module.open.notify.NotifyService;
+import cn.hamm.demo.module.system.coderule.CodeRuleService;
 import cn.hamm.demo.module.system.log.LogService;
 import cn.hamm.demo.module.system.menu.MenuService;
 import cn.hamm.demo.module.system.permission.PermissionService;
 import cn.hamm.demo.module.user.UserService;
-import cn.hamm.demo.module.notify.NotifyService;
+import cn.hamm.demo.module.user.role.RoleService;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -51,6 +52,9 @@ public class Services {
     @Getter
     private static NotifyService notifyService;
 
+    @Getter
+    private static CodeRuleService codeRuleService;
+
     @Autowired
     public Services(
             Environment environment,
@@ -62,7 +66,8 @@ public class Services {
             LogService logService,
             OpenAppService openAppService,
             OpenLogService openLogService,
-            NotifyService notifyService
+            NotifyService notifyService,
+            CodeRuleService codeRuleService
     ) {
         Services.environment = environment;
         Services.appConfig = appConfig;
@@ -74,5 +79,6 @@ public class Services {
         Services.openAppService = openAppService;
         Services.openLogService = openLogService;
         Services.notifyService = notifyService;
+        Services.codeRuleService = codeRuleService;
     }
 }

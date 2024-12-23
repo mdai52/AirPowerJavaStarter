@@ -1,4 +1,4 @@
-package cn.hamm.demo.module.role;
+package cn.hamm.demo.module.user.role;
 
 import cn.hamm.demo.base.BaseService;
 import org.springframework.stereotype.Service;

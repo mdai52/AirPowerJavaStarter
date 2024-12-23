@@ -10,8 +10,8 @@ import cn.hamm.airpower.root.RootController;
 import cn.hamm.airpower.util.DictionaryUtil;
 import cn.hamm.airpower.util.ReflectUtil;
 import cn.hamm.demo.common.exception.CustomError;
-import cn.hamm.demo.module.notify.enums.NotifyScene;
-import cn.hamm.demo.module.notify.enums.NotifyChannel;
+import cn.hamm.demo.module.open.notify.enums.NotifyChannel;
+import cn.hamm.demo.module.open.notify.enums.NotifyScene;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.ArrayList;

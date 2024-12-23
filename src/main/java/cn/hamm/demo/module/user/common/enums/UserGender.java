@@ -1,4 +1,4 @@
-package cn.hamm.demo.module.user.enums;
+package cn.hamm.demo.module.user.common.enums;
 
 import cn.hamm.airpower.interfaces.IDictionary;
 import lombok.AllArgsConstructor;

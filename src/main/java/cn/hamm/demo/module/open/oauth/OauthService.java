@@ -7,7 +7,7 @@ import cn.hamm.demo.module.open.oauth.model.base.AbstractOauthCallback;
 import cn.hamm.demo.module.open.oauth.model.base.OauthUserInfo;
 import cn.hamm.demo.module.open.oauth.model.enums.OauthPlatform;
 import cn.hamm.demo.module.user.UserEntity;
-import cn.hamm.demo.module.user.enums.UserGender;
+import cn.hamm.demo.module.user.common.enums.UserGender;
 import cn.hamm.demo.module.user.thirdlogin.UserThirdLoginEntity;
 import cn.hamm.demo.module.user.thirdlogin.UserThirdLoginService;
 import lombok.extern.slf4j.Slf4j;

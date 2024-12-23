@@ -1,4 +1,4 @@
-package cn.hamm.demo.module.notify;
+package cn.hamm.demo.module.open.notify;
 
 import cn.hamm.demo.base.BaseRepository;
 import org.springframework.stereotype.Repository;
