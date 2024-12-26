@@ -41,6 +41,7 @@ public class DepartmentEntity extends BaseEntity<DepartmentEntity> implements IT
     @Description("部门名称")
     @Column(columnDefinition = "varchar(255) default '' comment '部门名称'")
     @NotBlank(groups = {WhenUpdate.class, WhenAdd.class}, message = "应用名称不能为空")
+    @Search(Search.Mode.LIKE)
     private String name;
 
     @Description("父级ID")

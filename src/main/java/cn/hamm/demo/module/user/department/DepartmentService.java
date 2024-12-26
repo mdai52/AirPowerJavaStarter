@@ -1,5 +1,6 @@
 package cn.hamm.demo.module.user.department;
 
+import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.airpower.model.Sort;
 import cn.hamm.airpower.model.query.QueryListRequest;
 import cn.hamm.airpower.root.RootEntity;
@@ -45,5 +46,18 @@ public class DepartmentService extends BaseService<DepartmentEntity, DepartmentR
     protected @NotNull List<DepartmentEntity> afterGetList(@NotNull List<DepartmentEntity> list) {
         list.forEach(RootEntity::excludeBaseData);
         return list;
+    }
+
+    @Override
+    protected DepartmentEntity beforeAppSaveToDatabase(@NotNull DepartmentEntity department) {
+        DepartmentEntity filter = new DepartmentEntity().setParentId(department.getParentId()).setName(department.getName());
+        List<DepartmentEntity> exists = filter(filter);
+        if (Objects.nonNull(department.getId())) {
+            // 有ID 编辑 不允许有同名的部门 且ID不是自己的部门
+            ServiceError.FORBIDDEN_EXIST.when(!exists.isEmpty() && !Objects.equals(exists.get(0).getId(), department.getId()), "同级别下部门不允许重复");
+        } else {
+            ServiceError.FORBIDDEN_EXIST.whenNotNull(!exists.isEmpty(), "同级别下部门已有同名部门");
+        }
+        return department;
     }
 }
