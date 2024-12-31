@@ -1,4 +1,4 @@
-package cn.hamm.demo.module.notify;
+package cn.hamm.demo.module.open.notify;
 
 import cn.hamm.airpower.helper.AirHelper;
 import cn.hamm.airpower.model.Json;
@@ -6,8 +6,8 @@ import cn.hamm.airpower.util.DictionaryUtil;
 import cn.hamm.airpower.util.HttpUtil;
 import cn.hamm.demo.base.BaseService;
 import cn.hamm.demo.common.Services;
-import cn.hamm.demo.module.notify.enums.NotifyChannel;
-import cn.hamm.demo.module.notify.enums.NotifyScene;
+import cn.hamm.demo.module.open.notify.enums.NotifyChannel;
+import cn.hamm.demo.module.open.notify.enums.NotifyScene;
 import jakarta.mail.MessagingException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.threads.ThreadPoolExecutor;

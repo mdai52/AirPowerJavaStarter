@@ -6,6 +6,9 @@ import cn.hamm.airpower.util.RandomUtil;
 import cn.hamm.demo.common.Services;
 import cn.hamm.demo.module.open.app.OpenAppEntity;
 import cn.hamm.demo.module.open.app.OpenAppService;
+import cn.hamm.demo.module.system.coderule.CodeRuleEntity;
+import cn.hamm.demo.module.system.coderule.CodeRuleField;
+import cn.hamm.demo.module.system.coderule.CodeRuleService;
 import cn.hamm.demo.module.user.UserEntity;
 import cn.hamm.demo.module.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +28,9 @@ public class Initialization implements CommandLineRunner {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private CodeRuleService codeRuleService;
+
     private void loadUser() {
         // 初始化用户
         UserEntity user = userService.getMaybeNull(1L);
@@ -43,6 +49,24 @@ public class Initialization implements CommandLineRunner {
         System.out.println("---------------------------------");
     }
 
+
+    private void loadCodeRules() {
+        CodeRuleField[] codeRuleFields = CodeRuleField.class.getEnumConstants();
+        for (CodeRuleField codeRuleField : codeRuleFields) {
+            CodeRuleEntity codeRule = codeRuleService.getByRuleField(codeRuleField.getKey());
+            if (Objects.isNull(codeRule)) {
+                codeRuleService.add(
+                        new CodeRuleEntity()
+                                .setIsSystem(true)
+                                .setRuleField(codeRuleField.getKey())
+                                .setPrefix(codeRuleField.getDefaultPrefix())
+                                .setTemplate(codeRuleField.getDefaultTemplate())
+                                .setSnType(codeRuleField.getDefaultSnType().getKey())
+                );
+            }
+        }
+    }
+
     @Override
     public void run(String... args) {
         // 开始加载数据，请注意，以下数据请自行确保不会重复加载！！！
@@ -53,6 +77,7 @@ public class Initialization implements CommandLineRunner {
         String[] localEnvList = {"local-hamm"};
         if (Arrays.stream(localEnvList).toList().contains(AirHelper.getCurrentEnvironment())) {
             // 其他需要在本地初始化的数据
+            loadCodeRules();
             OpenAppEntity openApp = new OpenAppEntity().setAppName("人力资源管理系统");
             OpenAppService openAppService = Services.getOpenAppService();
             openApp.setAppSecret("8bQfc5ddy4LkZb4TMgM4UwMfVkbIHiXiaHCXyqANAAc=")

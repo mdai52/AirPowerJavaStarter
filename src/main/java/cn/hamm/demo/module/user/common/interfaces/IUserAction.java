@@ -1,4 +1,4 @@
-package cn.hamm.demo.module.user;
+package cn.hamm.demo.module.user.common.interfaces;
 
 /**
  * <h1>用户行为</h1>
@@ -8,13 +8,13 @@ package cn.hamm.demo.module.user;
 public interface IUserAction {
 
     /**
-     * <h3>ID+密码 邮箱+密码登录</h3>
+     * <h3>ID密码 密码登录</h3>
      */
     interface WhenLogin {
     }
 
     /**
-     * <h3>邮箱+验证码登录</h3>
+     * <h3>邮箱验证码登录</h3>
      */
     interface WhenLoginViaEmail {
     }

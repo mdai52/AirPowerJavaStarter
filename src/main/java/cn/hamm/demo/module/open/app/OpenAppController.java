@@ -7,7 +7,10 @@ import cn.hamm.airpower.model.Json;
 import cn.hamm.airpower.root.RootEntity;
 import cn.hamm.airpower.util.RandomUtil;
 import cn.hamm.demo.base.BaseController;
+import cn.hamm.demo.module.open.notify.NotifyService;
+import cn.hamm.demo.module.open.notify.enums.NotifyScene;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,6 +26,9 @@ import java.util.Base64;
 @Description("开放应用")
 @Extends(exclude = {Api.Export, Api.QueryExport})
 public class OpenAppController extends BaseController<OpenAppEntity, OpenAppService, OpenAppRepository> implements IOpenAppAction {
+    @Autowired
+    private NotifyService notifyService;
+
     @Description("通过AppKey获取应用信息")
     @PostMapping("getByAppKey")
     @Permission(login = false)
@@ -50,6 +56,9 @@ public class OpenAppController extends BaseController<OpenAppEntity, OpenAppServ
         String appSecret = Base64.getEncoder().encodeToString(RandomUtil.randomBytes());
         exist.setAppSecret(appSecret);
         service.update(exist);
+        notifyService.sendNotification(NotifyScene.APP_SECRET_RESET, exist, String.format(
+                "应用 %s 的秘钥被重置", exist.getAppName())
+        );
         return Json.data(appSecret);
     }
 
