@@ -1,4 +1,4 @@
-package cn.hamm.demo.module.notify.enums;
+package cn.hamm.demo.module.open.notify.enums;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.interfaces.IDictionary;

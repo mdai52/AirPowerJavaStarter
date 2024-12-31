@@ -1,11 +1,11 @@
-package cn.hamm.demo.module.notify;
+package cn.hamm.demo.module.open.notify;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.validate.dictionary.Dictionary;
 import cn.hamm.demo.base.BaseEntity;
-import cn.hamm.demo.module.notify.enums.NotifyScene;
-import cn.hamm.demo.module.notify.enums.NotifyChannel;
+import cn.hamm.demo.module.open.notify.enums.NotifyChannel;
+import cn.hamm.demo.module.open.notify.enums.NotifyScene;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;

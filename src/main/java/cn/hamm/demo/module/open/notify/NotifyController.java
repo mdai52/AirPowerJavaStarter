@@ -1,4 +1,4 @@
-package cn.hamm.demo.module.notify;
+package cn.hamm.demo.module.open.notify;
 
 import cn.hamm.airpower.annotation.ApiController;
 import cn.hamm.airpower.annotation.Description;
@@ -6,10 +6,9 @@ import cn.hamm.airpower.annotation.Extends;
 import cn.hamm.airpower.annotation.Permission;
 import cn.hamm.airpower.config.Constant;
 import cn.hamm.airpower.enums.Api;
-import cn.hamm.airpower.interfaces.IEntityAction;
 import cn.hamm.airpower.model.Json;
 import cn.hamm.demo.base.BaseController;
-import cn.hamm.demo.module.notify.enums.NotifyScene;
+import cn.hamm.demo.module.open.notify.enums.NotifyScene;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.Arrays;
@@ -23,7 +22,7 @@ import java.util.Map;
 @ApiController("notify")
 @Description("通知钩子")
 @Extends(exclude = {Api.Export, Api.QueryExport})
-public class NotifyController extends BaseController<NotifyEntity, NotifyService, NotifyRepository> implements IEntityAction {
+public class NotifyController extends BaseController<NotifyEntity, NotifyService, NotifyRepository> {
     @Description("获取支持通知的场景列表")
     @PostMapping("getSceneList")
     @Permission(authorize = false)

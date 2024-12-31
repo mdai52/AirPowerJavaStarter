@@ -1,4 +1,4 @@
-package cn.hamm.demo.module.role;
+package cn.hamm.demo.module.user.role;
 
 /**
  * <h1>角色行为</h1>

@@ -1,4 +1,4 @@
-package cn.hamm.demo.module.notify;
+package cn.hamm.demo.module.user.department;
 
 import cn.hamm.demo.base.BaseRepository;
 import org.springframework.stereotype.Repository;
@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
  * @author Hamm.cn
  */
 @Repository
-public interface NotifyRepository extends BaseRepository<NotifyEntity> {
+public interface DepartmentRepository extends BaseRepository<DepartmentEntity> {
 }
