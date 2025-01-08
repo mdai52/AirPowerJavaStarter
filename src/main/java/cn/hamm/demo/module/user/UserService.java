@@ -11,6 +11,7 @@ import cn.hamm.airpower.util.RandomUtil;
 import cn.hamm.airpower.util.TreeUtil;
 import cn.hamm.demo.base.BaseService;
 import cn.hamm.demo.common.Services;
+import cn.hamm.demo.common.config.AppConfig;
 import cn.hamm.demo.common.exception.CustomError;
 import cn.hamm.demo.module.system.menu.MenuEntity;
 import cn.hamm.demo.module.system.permission.PermissionEntity;
@@ -45,11 +46,18 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * <h3>Code缓存秒数</h3>
      */
     private static final int CACHE_CODE_EXPIRE_SECOND = Constant.SECOND_PER_MINUTE * 5;
-
+    /**
+     * <h2>缓存房间用户</h2>
+     */
+    private final String CACHE_ROOM_KEY = "ROOM_USER_";
     @Autowired
     private EmailHelper emailHelper;
+
     @Autowired
     private CookieHelper cookieHelper;
+
+    @Autowired
+    private AppConfig appConfig;
 
     /**
      * <h3>获取新的密码盐</h3>
@@ -354,5 +362,29 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     protected void beforeDisable(long id) {
         UserEntity existUser = get(id);
         ServiceError.FORBIDDEN_DISABLED_NOT_ALLOWED.when(existUser.isRootUser(), "系统内置用户无法被禁用!");
+    }
+
+    /**
+     * <h2>获取当前用户所在的房间ID</h2>
+     *
+     * @param userId 用户ID
+     * @return 房间ID
+     */
+    public long getCurrentRoomId(long userId) {
+        Object data = redisHelper.get(CACHE_ROOM_KEY + userId);
+        if (Objects.isNull(data)) {
+            return appConfig.getDefaultRoomId();
+        }
+        return Integer.parseInt(data.toString());
+    }
+
+    /**
+     * <h2>保存当前用户所在的房间ID</h2>
+     *
+     * @param userId 用户ID
+     * @param roomId 房间ID
+     */
+    public void saveCurrentRoomId(long userId, long roomId) {
+        redisHelper.set(CACHE_ROOM_KEY + userId, roomId, Constant.SECOND_PER_DAY * 30);
     }
 }

@@ -26,4 +26,9 @@ public class AppConfig {
      * <h3>授权地址 用于 {@code OAuth2}</h3>
      */
     private String authorizeUrl;
+
+    /**
+     * <h2>默认房间ID {@code 不是房间号}</h2>
+     */
+    private Long defaultRoomId = 1L;
 }

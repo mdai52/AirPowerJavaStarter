@@ -4,6 +4,7 @@ import cn.hamm.airpower.helper.AirHelper;
 import cn.hamm.airpower.util.PasswordUtil;
 import cn.hamm.airpower.util.RandomUtil;
 import cn.hamm.demo.common.Services;
+import cn.hamm.demo.module.chat.room.RoomEntity;
 import cn.hamm.demo.module.open.app.OpenAppEntity;
 import cn.hamm.demo.module.open.app.OpenAppService;
 import cn.hamm.demo.module.system.coderule.CodeRuleEntity;
@@ -46,7 +47,23 @@ public class Initialization implements CommandLineRunner {
                 .setIdCard("500000200001010011")
                 .setPhone("17666666666")
                 .setSalt(salt));
+        userService.add(new UserEntity()
+                .setNickname("Ghost")
+                .setEmail("hamm@hamm.cn")
+                .setPassword(PasswordUtil.encode("Aa123456", salt))
+                .setRealName("凌小云")
+                .setIdCard("500000200001010012")
+                .setPhone("17666666661")
+                .setSalt(salt));
         System.out.println("---------------------------------");
+        user = userService.getMaybeNull(1L);
+
+        Services.getRoomService().add(new RoomEntity()
+                .setName("广场")
+                .setCode(888)
+                .setIsOfficial(true)
+                .setIsHot(true).setOwner(user)
+        );
     }
 
 

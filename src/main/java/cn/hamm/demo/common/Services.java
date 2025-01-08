@@ -1,6 +1,8 @@
 package cn.hamm.demo.common;
 
 import cn.hamm.demo.common.config.AppConfig;
+import cn.hamm.demo.module.chat.member.MemberService;
+import cn.hamm.demo.module.chat.room.RoomService;
 import cn.hamm.demo.module.open.app.OpenAppService;
 import cn.hamm.demo.module.open.log.OpenLogService;
 import cn.hamm.demo.module.open.notify.NotifyService;
@@ -55,6 +57,12 @@ public class Services {
     @Getter
     private static CodeRuleService codeRuleService;
 
+    @Getter
+    private static RoomService roomService;
+
+    @Getter
+    private static MemberService memberService;
+
     @Autowired
     public Services(
             Environment environment,
@@ -67,7 +75,9 @@ public class Services {
             OpenAppService openAppService,
             OpenLogService openLogService,
             NotifyService notifyService,
-            CodeRuleService codeRuleService
+            CodeRuleService codeRuleService,
+            RoomService roomService,
+            MemberService memberService
     ) {
         Services.environment = environment;
         Services.appConfig = appConfig;
@@ -80,5 +90,7 @@ public class Services {
         Services.openLogService = openLogService;
         Services.notifyService = notifyService;
         Services.codeRuleService = codeRuleService;
+        Services.roomService = roomService;
+        Services.memberService = memberService;
     }
 }

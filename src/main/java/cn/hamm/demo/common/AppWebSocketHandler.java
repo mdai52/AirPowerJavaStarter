@@ -1,11 +1,26 @@
 package cn.hamm.demo.common;
 
+import cn.hamm.airpower.exception.ServiceError;
+import cn.hamm.airpower.helper.WebsocketHelper;
+import cn.hamm.airpower.model.Json;
 import cn.hamm.airpower.websocket.WebSocketHandler;
 import cn.hamm.airpower.websocket.WebSocketPayload;
+import cn.hamm.demo.module.chat.enums.ChatEventType;
+import cn.hamm.demo.module.chat.member.MemberEntity;
+import cn.hamm.demo.module.chat.member.MemberService;
+import cn.hamm.demo.module.chat.room.RoomEntity;
+import cn.hamm.demo.module.chat.room.RoomService;
+import cn.hamm.demo.module.chat.room.event.MemberTextMessageEvent;
+import cn.hamm.demo.module.chat.room.model.RoomJoinRequest;
+import cn.hamm.demo.module.chat.room.model.RoomMemberEvent;
+import cn.hamm.demo.module.user.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
+
+import java.util.Objects;
 
 /**
  * <h1>应用自定义的事件处理器</h1>
@@ -16,31 +31,147 @@ import org.springframework.web.socket.WebSocketSession;
 @Component
 public class AppWebSocketHandler extends WebSocketHandler {
     /**
-     * <h3>订阅分组前缀</h3>
+     * <h2>订阅分组前缀</h2>
      */
-    public static final String GROUP_PREFIX = "group_";
+    private static final String GROUP_PREFIX = "group_";
+
+    @Autowired
+    private WebsocketHelper websocketHelper;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private MemberService memberService;
+
+    @Autowired
+    private RoomService roomService;
 
     /**
-     * <h3>加入房间</h3>
+     * <h2>房间事件</h2>
+     *
+     * @param userId 用户ID
+     * @param roomId 房间ID
+     * @param event  事件类型
      */
-    private static final String EVENT_JOIN = "join";
-
-    /**
-     * <h3>离开房间</h3>
-     */
-    private static final String EVENT_LEAVE = "leave";
-
-    @Override
-    public void onWebSocketPayload(@NotNull WebSocketPayload webSocketPayload, @NotNull WebSocketSession session) {
-        switch (webSocketPayload.getType()) {
-            case EVENT_JOIN:
-                subscribe(GROUP_PREFIX + webSocketPayload.getData(), session);
-                sendWebSocketPayload(session, new WebSocketPayload().setType(EVENT_JOIN).setData("User " + userIdHashMap.get(session.getId()) + " 加入了房间"));
-                break;
-            case EVENT_LEAVE:
-                unsubscribe(GROUP_PREFIX + webSocketPayload.getData(), session);
+    private void onRoomEvent(long userId, long roomId, @NotNull ChatEventType event) {
+        switch (event) {
+            case ROOM_MEMBER_JOIN:
+            case ROOM_MEMBER_LEAVE:
                 break;
             default:
+                ServiceError.PARAM_INVALID.show("错误的房间事件异常类型");
+        }
+        MemberEntity member = memberService.getMemberWithAutoCreate(userId, roomId);
+        member.getUser().setEmail(null).excludeBaseData();
+        member.getRoom().setPassword(null).excludeBaseData();
+
+        RoomMemberEvent roomMemberEvent = new RoomMemberEvent();
+        roomMemberEvent.setMember(member);
+
+        websocketHelper.publishToChannel(GROUP_PREFIX + roomId, new WebSocketPayload()
+                .setType(event.getKeyString())
+                .setData(Json.toString(roomMemberEvent)));
+    }
+
+    @Override
+    protected void onWebSocketPayload(@NotNull WebSocketPayload webSocketPayload, @NotNull WebSocketSession session) {
+        Long userId = userIdHashMap.get(session.getId());
+        if (Objects.isNull(userId)) {
+            return;
+        }
+        switch (ChatEventType.getByStringKey(webSocketPayload.getType())) {
+            case ROOM_MEMBER_JOIN:
+                RoomJoinRequest joinRequest = Json.parse(webSocketPayload.getData(), RoomJoinRequest.class);
+                // 查房间信息
+                RoomEntity room = roomService.getByCode(joinRequest.getRoomCode());
+                if (Objects.isNull(room)) {
+                    webSocketPayload = new WebSocketPayload()
+                            .setType(ChatEventType.ROOM_JOIN_FAIL.getKeyString())
+                            .setData("房间号 " + joinRequest.getRoomCode() + "不存在");
+                    sendWebSocketPayload(session, webSocketPayload);
+                    return;
+                }
+                MemberEntity joinMember = memberService.getMemberWithAutoCreate(userId, room.getId());
+                if (roomService.checkIfNeedPassword(joinMember) &&
+                        !room.getPassword().equalsIgnoreCase(joinRequest.getPassword())) {
+                    // todo 密码不正确
+                    webSocketPayload = new WebSocketPayload()
+                            .setType(ChatEventType.ROOM_JOIN_FAIL.getKeyString())
+                            .setData("进入房间失败，房间密码错误！");
+                    sendWebSocketPayload(session, webSocketPayload);
+                    return;
+                }
+
+                // 更新用户当前所在房间ID到缓存
+                userService.saveCurrentRoomId(userId, room.getId());
+                onRoomEvent(userId, room.getId(), ChatEventType.ROOM_MEMBER_JOIN);
+                subscribe(GROUP_PREFIX + room.getId(), session);
+
+                RoomMemberEvent memberJoinEvent = new RoomMemberEvent();
+                memberJoinEvent.setMember(getCurrentMember(userId));
+                sendWebSocketPayload(session, new WebSocketPayload()
+                        .setType(ChatEventType.ROOM_JOIN_SUCCESS.getKeyString())
+                        .setData(Json.toString(memberJoinEvent)));
+                break;
+            case ROOM_MEMBER_LEAVE:
+                leaveRoom(session, userId);
+                break;
+            case ROOM_TEXT_MESSAGE:
+                MemberTextMessageEvent memberTextMessageEvent = new MemberTextMessageEvent();
+                memberTextMessageEvent.setText(webSocketPayload.getData()).setMember(getCurrentMember(userId));
+                publishToUserRoom(userId, ChatEventType.ROOM_TEXT_MESSAGE, memberTextMessageEvent);
+                break;
+            default:
+        }
+    }
+
+    /**
+     * <h2>离开房间</h2>
+     *
+     * @param session websocket会话
+     * @param userId  用户ID
+     */
+    private void leaveRoom(@NotNull WebSocketSession session, long userId) {
+        long leaveRoomId = userService.getCurrentRoomId(userId);
+        onRoomEvent(userId, leaveRoomId, ChatEventType.ROOM_MEMBER_LEAVE);
+        unsubscribe(GROUP_PREFIX + leaveRoomId, session);
+
+        sendWebSocketPayload(session, new WebSocketPayload()
+                .setType(ChatEventType.ROOM_LEAVE_SUCCESS.getKeyString())
+        );
+    }
+
+    /**
+     * <h2>发布消息到当前用户的房间</h2>
+     *
+     * @param userId 用户ID
+     * @param type   世界事件类型
+     * @param event  事件
+     */
+    private void publishToUserRoom(long userId, @NotNull ChatEventType type, RoomMemberEvent event) {
+        WebSocketPayload payload = new WebSocketPayload();
+        payload.setType(type.getKeyString()).setData(Json.toString(event));
+        websocketHelper.publishToChannel(GROUP_PREFIX + userService.getCurrentRoomId(userId), payload);
+    }
+
+    /**
+     * <h2>获取当前用户的当前房间的成员信息</h2>
+     *
+     * @param userId 用户ID
+     * @return 成员信息
+     */
+    private @NotNull MemberEntity getCurrentMember(long userId) {
+        long roomId = userService.getCurrentRoomId(userId);
+        MemberEntity member = memberService.getMemberWithAutoCreate(userId, roomId);
+        member.excludeBaseData();
+        return member;
+    }
+
+    @Override
+    protected void afterDisconnect(@NotNull WebSocketSession session, Long userId) {
+        if (Objects.nonNull(userId)) {
+            leaveRoom(session, userId);
         }
     }
 }
