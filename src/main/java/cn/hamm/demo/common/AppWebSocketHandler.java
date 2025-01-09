@@ -20,7 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * <h1>应用自定义的事件处理器</h1>
@@ -34,16 +37,17 @@ public class AppWebSocketHandler extends WebSocketHandler {
      * <h2>订阅分组前缀</h2>
      */
     private static final String GROUP_PREFIX = "group_";
+    /**
+     * <h3>房间在线用户列表</h3>
+     */
+    protected final ConcurrentHashMap<String, List<Long>> roomOnlineUserList = new ConcurrentHashMap<>();
 
     @Autowired
     private WebsocketHelper websocketHelper;
-
     @Autowired
     private UserService userService;
-
     @Autowired
     private MemberService memberService;
-
     @Autowired
     private RoomService roomService;
 
@@ -55,13 +59,23 @@ public class AppWebSocketHandler extends WebSocketHandler {
      * @param event  事件类型
      */
     private void onRoomEvent(long userId, long roomId, @NotNull ChatEventType event) {
+        List<Long> roomUserIdList = roomOnlineUserList.get(GROUP_PREFIX + roomId);
+        if (Objects.isNull(roomUserIdList)) {
+            roomUserIdList = new ArrayList<>();
+        }
         switch (event) {
             case ROOM_MEMBER_JOIN:
+                if (!roomUserIdList.contains(userId)) {
+                    roomUserIdList.add(userId);
+                }
+                break;
             case ROOM_MEMBER_LEAVE:
+                roomUserIdList.remove(userId);
                 break;
             default:
                 ServiceError.PARAM_INVALID.show("错误的房间事件异常类型");
         }
+        roomOnlineUserList.put(GROUP_PREFIX + roomId, roomUserIdList);
         MemberEntity member = memberService.getMemberWithAutoCreate(userId, roomId);
         member.getUser().setEmail(null).excludeBaseData();
         member.getRoom().setPassword(null).excludeBaseData();
@@ -72,6 +86,10 @@ public class AppWebSocketHandler extends WebSocketHandler {
         websocketHelper.publishToChannel(GROUP_PREFIX + roomId, new WebSocketPayload()
                 .setType(event.getKeyString())
                 .setData(Json.toString(roomMemberEvent)));
+        websocketHelper.publishToChannel(GROUP_PREFIX + roomId, new WebSocketPayload()
+                .setType(ChatEventType.ONLINE_COUNT_CHANGED.getKeyString())
+                .setData(Json.toString(roomUserIdList))
+        );
     }
 
     @Override
@@ -113,6 +131,11 @@ public class AppWebSocketHandler extends WebSocketHandler {
                 sendWebSocketPayload(session, new WebSocketPayload()
                         .setType(ChatEventType.ROOM_JOIN_SUCCESS.getKeyString())
                         .setData(Json.toString(memberJoinEvent)));
+
+                List<Long> roomUserIdList = roomOnlineUserList.get(GROUP_PREFIX + room.getId());
+                sendWebSocketPayload(session, new WebSocketPayload()
+                        .setType(ChatEventType.ONLINE_COUNT_CHANGED.getKeyString())
+                        .setData(Json.toString(roomUserIdList)));
                 break;
             case ROOM_MEMBER_LEAVE:
                 leaveRoom(session, userId);

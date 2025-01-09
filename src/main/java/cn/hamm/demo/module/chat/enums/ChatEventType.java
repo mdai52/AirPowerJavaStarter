@@ -62,6 +62,11 @@ public enum ChatEventType implements IDictionary {
     ROOM_LEAVE_FAIL(1006, "离开房间失败"),
 
     /**
+     * <h2>在线人数变更</h2>
+     */
+    ONLINE_COUNT_CHANGED(1050, "在线人数变更"),
+
+    /**
      * <h2>房间文本消息</h2>
      */
     ROOM_TEXT_MESSAGE(1100, "房间文本消息"),

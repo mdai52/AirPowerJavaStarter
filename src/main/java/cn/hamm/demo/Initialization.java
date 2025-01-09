@@ -60,8 +60,14 @@ public class Initialization implements CommandLineRunner {
 
         Services.getRoomService().add(new RoomEntity()
                 .setName("广场")
-                .setCode(888)
+                .setCode(666)
                 .setIsOfficial(true)
+                .setIsHot(true).setOwner(user)
+        );
+
+        Services.getRoomService().add(new RoomEntity()
+                .setName("测试")
+                .setCode(888)
                 .setIsHot(true).setOwner(user)
         );
     }
