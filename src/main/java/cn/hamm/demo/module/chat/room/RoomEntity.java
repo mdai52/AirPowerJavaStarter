@@ -5,7 +5,7 @@ import cn.hamm.airpower.annotation.ExcelColumn;
 import cn.hamm.airpower.annotation.ReadOnly;
 import cn.hamm.airpower.annotation.Search;
 import cn.hamm.demo.base.BaseEntity;
-import cn.hamm.demo.module.user.UserEntity;
+import cn.hamm.demo.module.personnel.user.UserEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

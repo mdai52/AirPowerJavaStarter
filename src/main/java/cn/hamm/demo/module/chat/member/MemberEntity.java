@@ -6,7 +6,7 @@ import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.validate.dictionary.Dictionary;
 import cn.hamm.demo.base.BaseEntity;
 import cn.hamm.demo.module.chat.room.RoomEntity;
-import cn.hamm.demo.module.user.UserEntity;
+import cn.hamm.demo.module.personnel.user.UserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;

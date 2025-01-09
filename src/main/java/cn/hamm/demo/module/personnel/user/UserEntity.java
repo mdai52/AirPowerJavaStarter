@@ -1,4 +1,4 @@
-package cn.hamm.demo.module.user;
+package cn.hamm.demo.module.personnel.user;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Desensitize;
@@ -6,9 +6,9 @@ import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.validate.dictionary.Dictionary;
 import cn.hamm.airpower.validate.phone.Phone;
 import cn.hamm.demo.base.BaseEntity;
-import cn.hamm.demo.module.user.common.enums.UserGender;
-import cn.hamm.demo.module.user.common.interfaces.IUserAction;
-import cn.hamm.demo.module.user.role.RoleEntity;
+import cn.hamm.demo.module.personnel.role.RoleEntity;
+import cn.hamm.demo.module.personnel.user.enums.UserGender;
+import cn.hamm.demo.module.personnel.user.interfaces.IUserAction;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;

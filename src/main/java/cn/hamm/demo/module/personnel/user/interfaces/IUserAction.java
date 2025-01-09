@@ -1,4 +1,4 @@
-package cn.hamm.demo.module.user.common.interfaces;
+package cn.hamm.demo.module.personnel.user.interfaces;
 
 /**
  * <h1>用户行为</h1>

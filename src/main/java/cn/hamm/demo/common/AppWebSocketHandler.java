@@ -13,7 +13,7 @@ import cn.hamm.demo.module.chat.room.RoomService;
 import cn.hamm.demo.module.chat.room.event.MemberTextMessageEvent;
 import cn.hamm.demo.module.chat.room.model.RoomJoinRequest;
 import cn.hamm.demo.module.chat.room.model.RoomMemberEvent;
-import cn.hamm.demo.module.user.UserService;
+import cn.hamm.demo.module.personnel.user.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;

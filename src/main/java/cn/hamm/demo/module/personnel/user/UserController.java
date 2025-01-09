@@ -1,4 +1,4 @@
-package cn.hamm.demo.module.user;
+package cn.hamm.demo.module.personnel.user;
 
 import cn.hamm.airpower.annotation.ApiController;
 import cn.hamm.airpower.annotation.Description;
@@ -9,11 +9,11 @@ import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.airpower.helper.CookieHelper;
 import cn.hamm.airpower.model.Json;
 import cn.hamm.demo.base.BaseController;
+import cn.hamm.demo.module.open.thirdlogin.UserThirdLoginEntity;
+import cn.hamm.demo.module.open.thirdlogin.UserThirdLoginService;
+import cn.hamm.demo.module.personnel.user.enums.UserLoginType;
+import cn.hamm.demo.module.personnel.user.interfaces.IUserAction;
 import cn.hamm.demo.module.system.permission.PermissionEntity;
-import cn.hamm.demo.module.user.common.enums.UserLoginType;
-import cn.hamm.demo.module.user.common.interfaces.IUserAction;
-import cn.hamm.demo.module.user.thirdlogin.UserThirdLoginEntity;
-import cn.hamm.demo.module.user.thirdlogin.UserThirdLoginService;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;

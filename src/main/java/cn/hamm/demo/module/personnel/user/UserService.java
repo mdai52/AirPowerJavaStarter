@@ -1,4 +1,4 @@
-package cn.hamm.demo.module.user;
+package cn.hamm.demo.module.personnel.user;
 
 import cn.hamm.airpower.config.Constant;
 import cn.hamm.airpower.exception.ServiceError;

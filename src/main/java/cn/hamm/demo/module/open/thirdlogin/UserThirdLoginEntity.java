@@ -1,9 +1,9 @@
-package cn.hamm.demo.module.user.thirdlogin;
+package cn.hamm.demo.module.open.thirdlogin;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Search;
 import cn.hamm.demo.base.BaseEntity;
-import cn.hamm.demo.module.user.UserEntity;
+import cn.hamm.demo.module.personnel.user.UserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;

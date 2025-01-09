@@ -1,4 +1,4 @@
-package cn.hamm.demo.module.user;
+package cn.hamm.demo.module.personnel.user;
 
 import cn.hamm.demo.base.BaseRepository;
 import org.springframework.stereotype.Repository;

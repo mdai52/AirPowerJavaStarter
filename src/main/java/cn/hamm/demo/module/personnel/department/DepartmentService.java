@@ -1,4 +1,4 @@
-package cn.hamm.demo.module.user.department;
+package cn.hamm.demo.module.personnel.department;
 
 import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.airpower.model.Sort;

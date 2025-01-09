@@ -62,13 +62,13 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
         firstMenu = new MenuEntity().setName("人事管理").setOrderNo(88).setParentId(0L);
         firstMenu = get(add(firstMenu));
 
-        secondMenu = new MenuEntity().setName("用户管理").setPath("/console/user/list").setParentId(firstMenu.getId());
+        secondMenu = new MenuEntity().setName("用户管理").setPath("/console/personnel/user/list").setParentId(firstMenu.getId());
         add(secondMenu);
 
-        secondMenu = new MenuEntity().setName("角色管理").setPath("/console/role/list").setParentId(firstMenu.getId());
+        secondMenu = new MenuEntity().setName("角色管理").setPath("/console/personnel/role/list").setParentId(firstMenu.getId());
         add(secondMenu);
 
-        secondMenu = new MenuEntity().setName("部门管理").setPath("/console/department/list").setParentId(firstMenu.getId());
+        secondMenu = new MenuEntity().setName("部门管理").setPath("/console/personnel/department/list").setParentId(firstMenu.getId());
         add(secondMenu);
 
         // 开放能力
@@ -85,13 +85,13 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
         firstMenu = new MenuEntity().setName("系统设置").setOrderNo(2).setParentId(0L);
         firstMenu = get(add(firstMenu));
 
-        secondMenu = new MenuEntity().setName("权限管理").setPath("/console/permission/list").setParentId(firstMenu.getId());
+        secondMenu = new MenuEntity().setName("权限管理").setPath("/console/system/permission/list").setParentId(firstMenu.getId());
         add(secondMenu);
 
-        secondMenu = new MenuEntity().setName("菜单管理").setPath("/console/menu/list").setParentId(firstMenu.getId());
+        secondMenu = new MenuEntity().setName("菜单管理").setPath("/console/system/menu/list").setParentId(firstMenu.getId());
         add(secondMenu);
 
-        secondMenu = new MenuEntity().setName("编码规则").setPath("/console/coderule/list").setParentId(firstMenu.getId());
+        secondMenu = new MenuEntity().setName("编码规则").setPath("/console/system/coderule/list").setParentId(firstMenu.getId());
         add(secondMenu);
     }
 

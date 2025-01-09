@@ -5,7 +5,7 @@ import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Permission;
 import cn.hamm.airpower.model.Json;
 import cn.hamm.demo.base.BaseController;
-import cn.hamm.demo.module.user.UserEntity;
+import cn.hamm.demo.module.personnel.user.UserEntity;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;

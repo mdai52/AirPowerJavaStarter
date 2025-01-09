@@ -4,7 +4,7 @@ import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.demo.base.BaseService;
 import cn.hamm.demo.common.Services;
 import cn.hamm.demo.module.chat.room.RoomEntity;
-import cn.hamm.demo.module.user.UserEntity;
+import cn.hamm.demo.module.personnel.user.UserEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;

@@ -1,4 +1,4 @@
-package cn.hamm.demo.module.user.thirdlogin;
+package cn.hamm.demo.module.open.thirdlogin;
 
 import cn.hamm.demo.base.BaseService;
 import lombok.extern.slf4j.Slf4j;

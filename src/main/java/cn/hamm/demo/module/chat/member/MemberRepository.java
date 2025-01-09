@@ -2,7 +2,7 @@ package cn.hamm.demo.module.chat.member;
 
 import cn.hamm.demo.base.BaseRepository;
 import cn.hamm.demo.module.chat.room.RoomEntity;
-import cn.hamm.demo.module.user.UserEntity;
+import cn.hamm.demo.module.personnel.user.UserEntity;
 import org.springframework.stereotype.Repository;
 
 /**

@@ -8,7 +8,7 @@ import cn.hamm.demo.base.BaseService;
 import cn.hamm.demo.common.Services;
 import cn.hamm.demo.module.chat.member.MemberEntity;
 import cn.hamm.demo.module.chat.member.MemberRole;
-import cn.hamm.demo.module.user.UserEntity;
+import cn.hamm.demo.module.personnel.user.UserEntity;
 import io.micrometer.common.util.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;

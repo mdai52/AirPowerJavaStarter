@@ -1,4 +1,4 @@
-package cn.hamm.demo.module.user.department;
+package cn.hamm.demo.module.personnel.department;
 
 import cn.hamm.airpower.annotation.ApiController;
 import cn.hamm.airpower.annotation.Description;
