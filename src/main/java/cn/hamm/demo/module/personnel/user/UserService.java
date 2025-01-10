@@ -13,9 +13,15 @@ import cn.hamm.demo.base.BaseService;
 import cn.hamm.demo.common.Services;
 import cn.hamm.demo.common.config.AppConfig;
 import cn.hamm.demo.common.exception.CustomError;
+import cn.hamm.demo.module.personnel.department.DepartmentEntity;
+import cn.hamm.demo.module.personnel.department.DepartmentService;
 import cn.hamm.demo.module.system.menu.MenuEntity;
 import cn.hamm.demo.module.system.permission.PermissionEntity;
 import jakarta.mail.MessagingException;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -25,9 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * <h1>Service</h1>
@@ -386,5 +390,37 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      */
     public void saveCurrentRoomId(long userId, long roomId) {
         redisHelper.set(CACHE_ROOM_KEY + userId, roomId, Constant.SECOND_PER_DAY * 30);
+    }
+
+
+    @Override
+    protected @NotNull List<Predicate> addSearchPredicate(@NotNull Root<UserEntity> root, @NotNull CriteriaBuilder builder, @NotNull UserEntity search) {
+        Long departmentId = search.getDepartmentId();
+        if (Objects.isNull(departmentId)) {
+            return new ArrayList<>();
+        }
+        List<Predicate> predicateList = new ArrayList<>();
+        Set<Long> departmentIdList = getDepartmentList(departmentId);
+        if (!departmentIdList.isEmpty()) {
+            Join<UserEntity, DepartmentEntity> departmentJoin = root.join("departmentList");
+            Predicate inPredicate = departmentJoin.get(Constant.ID).in(departmentIdList);
+            predicateList.add(inPredicate);
+        }
+        return predicateList;
+    }
+
+    @Contract("_ -> new")
+    private @NotNull Set<Long> getDepartmentList(long parentId) {
+        Set<Long> departmentList = new HashSet<>();
+        getDepartmentList(parentId, departmentList);
+        return departmentList;
+    }
+
+    private void getDepartmentList(long parentId, @NotNull Set<Long> departmentIds) {
+        DepartmentService departmentService = Services.getDepartmentService();
+        DepartmentEntity parent = departmentService.get(parentId);
+        departmentIds.add(parent.getId());
+        List<DepartmentEntity> children = departmentService.filter(new DepartmentEntity().setParentId(parent.getId()));
+        children.forEach(child -> getDepartmentList(child.getId(), departmentIds));
     }
 }

@@ -56,7 +56,7 @@ public class DepartmentService extends BaseService<DepartmentEntity, DepartmentR
             // 有ID 编辑 不允许有同名的部门 且ID不是自己的部门
             ServiceError.FORBIDDEN_EXIST.when(!exists.isEmpty() && !Objects.equals(exists.get(0).getId(), department.getId()), "同级别下部门不允许重复");
         } else {
-            ServiceError.FORBIDDEN_EXIST.whenNotNull(!exists.isEmpty(), "同级别下部门已有同名部门");
+            ServiceError.FORBIDDEN_EXIST.when(!exists.isEmpty(), "同级别下部门已有同名部门");
         }
         return department;
     }

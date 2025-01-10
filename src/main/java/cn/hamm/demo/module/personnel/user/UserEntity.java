@@ -6,6 +6,7 @@ import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.validate.dictionary.Dictionary;
 import cn.hamm.airpower.validate.phone.Phone;
 import cn.hamm.demo.base.BaseEntity;
+import cn.hamm.demo.module.personnel.department.DepartmentEntity;
 import cn.hamm.demo.module.personnel.role.RoleEntity;
 import cn.hamm.demo.module.personnel.user.enums.UserGender;
 import cn.hamm.demo.module.personnel.user.interfaces.IUserAction;
@@ -91,6 +92,10 @@ public class UserEntity extends BaseEntity<UserEntity> implements IUserAction {
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<RoleEntity> roleList;
 
+    @Description("部门列表")
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<DepartmentEntity> departmentList;
+
     /// ////////////////////
 
     @Description("邮箱验证码")
@@ -102,6 +107,10 @@ public class UserEntity extends BaseEntity<UserEntity> implements IUserAction {
     @NotBlank(groups = {WhenUpdateMyPassword.class}, message = "原始密码不能为空")
     @Transient
     private String oldPassword;
+
+    @Description("部门ID查询")
+    @Transient
+    private Long departmentId;
 
     /**
      * <h3>获取是否超级管理员</h3>

@@ -6,6 +6,7 @@ import cn.hamm.demo.module.chat.room.RoomService;
 import cn.hamm.demo.module.open.app.OpenAppService;
 import cn.hamm.demo.module.open.log.OpenLogService;
 import cn.hamm.demo.module.open.notify.NotifyService;
+import cn.hamm.demo.module.personnel.department.DepartmentService;
 import cn.hamm.demo.module.personnel.role.RoleService;
 import cn.hamm.demo.module.personnel.user.UserService;
 import cn.hamm.demo.module.system.coderule.CodeRuleService;
@@ -63,6 +64,9 @@ public class Services {
     @Getter
     private static MemberService memberService;
 
+    @Getter
+    private static DepartmentService departmentService;
+
     @Autowired
     public Services(
             Environment environment,
@@ -77,7 +81,8 @@ public class Services {
             NotifyService notifyService,
             CodeRuleService codeRuleService,
             RoomService roomService,
-            MemberService memberService
+            MemberService memberService,
+            DepartmentService departmentService
     ) {
         Services.environment = environment;
         Services.appConfig = appConfig;
@@ -92,5 +97,6 @@ public class Services {
         Services.codeRuleService = codeRuleService;
         Services.roomService = roomService;
         Services.memberService = memberService;
+        Services.departmentService = departmentService;
     }
 }
