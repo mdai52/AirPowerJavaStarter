@@ -1,4 +1,4 @@
-package cn.hamm.demo.module.system.configuration;
+package cn.hamm.demo.module.system.config;
 
 import cn.hamm.demo.base.BaseRepository;
 import org.springframework.stereotype.Repository;
@@ -9,12 +9,12 @@ import org.springframework.stereotype.Repository;
  * @author Hamm.cn
  */
 @Repository
-public interface ConfigurationRepository extends BaseRepository<ConfigurationEntity> {
+public interface ConfigRepository extends BaseRepository<ConfigEntity> {
     /**
      * <h3>根据标识查询配置信息</h3>
      *
      * @param flag 配置标识
      * @return 配置信息
      */
-    ConfigurationEntity getByFlag(String flag);
+    ConfigEntity getByFlag(String flag);
 }

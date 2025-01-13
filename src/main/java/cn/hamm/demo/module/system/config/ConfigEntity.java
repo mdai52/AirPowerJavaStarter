@@ -1,10 +1,12 @@
-package cn.hamm.demo.module.system.configuration;
+package cn.hamm.demo.module.system.config;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.ReadOnly;
 import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.config.Constant;
+import cn.hamm.airpower.validate.dictionary.Dictionary;
 import cn.hamm.demo.base.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -29,17 +31,28 @@ import java.util.Objects;
 @Data
 @DynamicInsert
 @DynamicUpdate
-@Table(name = "configuration")
+@Table(name = "config")
 @Description("配置信息")
-public class ConfigurationEntity extends BaseEntity<ConfigurationEntity> {
+public class ConfigEntity extends BaseEntity<ConfigEntity> {
     @Description("配置标识")
     @Column(columnDefinition = "varchar(255) comment '规则字段'", unique = true)
     @NotBlank(groups = {WhenUpdate.class, WhenAdd.class}, message = "配置标识不能为空")
     private String flag;
 
+    @Description("配置名称")
+    @Column(columnDefinition = "varchar(255) default '' comment '配置名称'")
+    @NotBlank(groups = {WhenUpdate.class, WhenAdd.class}, message = "配置名称不能为空")
+    private String name;
+
     @Description("配置的值")
     @Column(columnDefinition = "varchar(255) default '' comment '字符串值'")
-    private String configuration;
+    private String config;
+
+    @Description("配置类型")
+    @Search(Search.Mode.EQUALS)
+    @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '配置类型'")
+    @Dictionary(value = ConfigType.class, groups = {WhenAdd.class, WhenUpdate.class})
+    private Integer type;
 
     @Description("内置配置")
     @Search(Search.Mode.EQUALS)
@@ -53,24 +66,25 @@ public class ConfigurationEntity extends BaseEntity<ConfigurationEntity> {
      * @param isSystem 内置配置
      * @return 配置信息
      */
-    public ConfigurationEntity setIsSystem(Boolean isSystem) {
+    public ConfigEntity setIsSystem(Boolean isSystem) {
         this.isSystem = isSystem;
         return this;
     }
 
     @Transient
-    public Boolean getBooleanConfiguration() {
-        if (Objects.isNull(configuration)) {
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    public Boolean booleanConfig() {
+        if (Objects.isNull(config)) {
             return false;
         }
-        return Constant.ONE_STRING.equals(configuration);
+        return Constant.ONE_STRING.equals(config);
     }
 
     @Transient
-    public Long getNumberConfiguration() {
-        if (Objects.isNull(configuration)) {
+    public Long numberConfig() {
+        if (Objects.isNull(config)) {
             return Constant.ZERO_LONG;
         }
-        return Long.parseLong(configuration);
+        return Long.parseLong(config);
     }
 }

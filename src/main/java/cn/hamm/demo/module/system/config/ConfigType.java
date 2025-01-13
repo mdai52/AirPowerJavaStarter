@@ -1,4 +1,4 @@
-package cn.hamm.demo.module.system.configuration;
+package cn.hamm.demo.module.system.config;
 
 import cn.hamm.airpower.interfaces.IDictionary;
 import lombok.AllArgsConstructor;
@@ -12,21 +12,21 @@ import lombok.Getter;
 @SuppressWarnings("AlibabaEnumConstantsMustHaveComment")
 @Getter
 @AllArgsConstructor
-public enum ConfigurationType implements IDictionary {
+public enum ConfigType implements IDictionary {
+    /**
+     * <h3>字符串类型</h3>
+     */
+    STRING(0, "字符串类型"),
+
     /**
      * <h3>布尔类型</h3>
      */
     BOOLEAN(1, "布尔类型"),
 
     /**
-     * <h3>字符串类型</h3>
-     */
-    STRING(2, "字符串类型"),
-
-    /**
      * <h3>数字类型</h3>
      */
-    NUMBER(3, "数字类型"),
+    NUMBER(2, "数字类型"),
     ;
 
     private final int key;

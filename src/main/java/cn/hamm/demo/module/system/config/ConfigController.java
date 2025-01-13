@@ -1,4 +1,4 @@
-package cn.hamm.demo.module.system.configuration;
+package cn.hamm.demo.module.system.config;
 
 import cn.hamm.airpower.annotation.ApiController;
 import cn.hamm.airpower.annotation.Description;
@@ -9,7 +9,7 @@ import cn.hamm.demo.base.BaseController;
  *
  * @author Hamm.cn
  */
-@ApiController("configuration")
+@ApiController("config")
 @Description("系统配置")
-public class ConfigurationController extends BaseController<ConfigurationEntity, ConfigurationService, ConfigurationRepository> {
+public class ConfigController extends BaseController<ConfigEntity, ConfigService, ConfigRepository> {
 }

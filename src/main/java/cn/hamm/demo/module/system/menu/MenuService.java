@@ -93,6 +93,9 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
 
         secondMenu = new MenuEntity().setName("编码规则").setPath("/console/system/coderule/list").setParentId(firstMenu.getId());
         add(secondMenu);
+
+        secondMenu = new MenuEntity().setName("参数配置").setPath("/console/system/config/list").setParentId(firstMenu.getId());
+        add(secondMenu);
     }
 
 }

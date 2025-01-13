@@ -15,6 +15,9 @@ import cn.hamm.demo.common.config.AppConfig;
 import cn.hamm.demo.common.exception.CustomError;
 import cn.hamm.demo.module.personnel.department.DepartmentEntity;
 import cn.hamm.demo.module.personnel.department.DepartmentService;
+import cn.hamm.demo.module.system.config.ConfigEntity;
+import cn.hamm.demo.module.system.config.ConfigFlag;
+import cn.hamm.demo.module.system.config.ConfigService;
 import cn.hamm.demo.module.system.menu.MenuEntity;
 import cn.hamm.demo.module.system.permission.PermissionEntity;
 import jakarta.mail.MessagingException;
@@ -62,6 +65,8 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
 
     @Autowired
     private AppConfig appConfig;
+    @Autowired
+    private ConfigService configService;
 
     /**
      * <h3>获取新的密码盐</h3>
@@ -300,15 +305,49 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     /**
      * <h3>邮箱验证码登录</h3>
      *
-     * @param userEntity 用户实体
+     * @param user 用户实体
      * @return 登录成功的用户
      */
-    public UserEntity loginViaEmail(@NotNull UserEntity userEntity) {
-        String code = getEmailCode(userEntity.getEmail());
-        ServiceError.PARAM_INVALID.whenNotEquals(code, userEntity.getCode(), "邮箱验证码不正确");
-        UserEntity existUser = repository.getByEmail(userEntity.getEmail());
-        ServiceError.PARAM_INVALID.whenNull("邮箱或验证码不正确");
+    public UserEntity loginViaEmail(@NotNull UserEntity user) {
+        String code = getEmailCode(user.getEmail());
+        ServiceError.PARAM_INVALID.whenNotEquals(code, user.getCode(), "邮箱验证码不正确");
+        UserEntity existUser = repository.getByEmail(user.getEmail());
+        ConfigEntity configuration = configService.get(ConfigFlag.AUTO_REGISTER_EMAIL_LOGIN);
+        if (configuration.booleanConfig()) {
+            // 注册一个用户
+            long userId = registerUserViaEmail(user.getEmail());
+            existUser = get(userId);
+        }
+        ServiceError.PARAM_INVALID.whenNull(existUser, "登录的邮箱账户不存在");
         return existUser;
+    }
+
+    /**
+     * <h3>邮箱注册</h3>
+     *
+     * @param email 邮箱
+     * @return 注册的用户ID
+     */
+    public long registerUserViaEmail(@NotNull String email) {
+        return registerUserViaEmail(email, RandomUtil.randomString());
+    }
+
+
+    /**
+     * <h3>邮箱注册</h3>
+     *
+     * @param email    邮箱
+     * @param password 密码
+     * @return 注册的用户ID
+     */
+    public long registerUserViaEmail(@NotNull String email, String password) {
+        // 昵称默认为邮箱账号 @ 前面的
+        String nickname = email.split(Constant.AT)[0];
+        String salt = RandomUtil.randomString(PASSWORD_SALT_LENGTH);
+        UserEntity user = new UserEntity().setPassword(PasswordUtil.encode(password, salt))
+                .setSalt(salt)
+                .setNickname(nickname);
+        return add(user);
     }
 
     /**
@@ -356,7 +395,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         if (!StringUtils.hasLength(user.getPassword())) {
             // 创建时没有设置密码的话 随机一个密码
             String salt = RandomUtil.randomString(PASSWORD_SALT_LENGTH);
-            user.setPassword(PasswordUtil.encode("Aa123456", salt));
+            user.setPassword(PasswordUtil.encode(RandomUtil.randomString(), salt));
             user.setSalt(salt);
         }
         return user;
