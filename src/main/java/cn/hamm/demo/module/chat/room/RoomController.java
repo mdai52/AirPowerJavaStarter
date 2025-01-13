@@ -42,7 +42,6 @@ public class RoomController extends BaseController<RoomEntity, RoomService, Room
         return Json.data(service.filter(filter));
     }
 
-
     @Description("获取热门房间")
     @PostMapping("getHotList")
     @Permission(authorize = false)

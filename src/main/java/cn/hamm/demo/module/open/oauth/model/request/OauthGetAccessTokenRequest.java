@@ -24,7 +24,6 @@ public class OauthGetAccessTokenRequest extends OauthAppKeyRequest {
     @NotBlank(groups = {WhenGetAccessToken.class}, message = "AppSecret不能为空")
     private String appSecret;
 
-
     /**
      * <h3>Code换AccessToken</h3>
      */

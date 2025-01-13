@@ -79,7 +79,6 @@ public class Initialization implements CommandLineRunner {
         );
     }
 
-
     private void loadCodeRules() {
         CodeRuleField[] codeRuleFields = CodeRuleField.class.getEnumConstants();
         for (CodeRuleField codeRuleField : codeRuleFields) {

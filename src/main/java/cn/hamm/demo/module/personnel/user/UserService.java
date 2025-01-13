@@ -332,7 +332,6 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         return registerUserViaEmail(email, RandomUtil.randomString());
     }
 
-
     /**
      * <h3>邮箱注册</h3>
      *
@@ -430,7 +429,6 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     public void saveCurrentRoomId(long userId, long roomId) {
         redisHelper.set(CACHE_ROOM_KEY + userId, roomId, Constant.SECOND_PER_DAY * 30);
     }
-
 
     @Override
     protected @NotNull List<Predicate> addSearchPredicate(@NotNull Root<UserEntity> root, @NotNull CriteriaBuilder builder, @NotNull UserEntity search) {

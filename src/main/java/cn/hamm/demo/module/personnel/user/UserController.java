@@ -109,7 +109,6 @@ public class UserController extends BaseController<UserEntity, UserService, User
         return doLogin(UserLoginType.VIA_ACCOUNT_PASSWORD, user, httpServletResponse);
     }
 
-
     @Description("退出登录")
     @Permission(login = false)
     @PostMapping("logout")
