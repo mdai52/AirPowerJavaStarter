@@ -40,5 +40,4 @@
 
 使用 IDEA 打开 `AirPowerJavaStarter` 目录，刷新项目的 `maven` 依赖，等待依赖安装完成即可。
 
-
 > 接下来就可以愉快的添砖Java了！
