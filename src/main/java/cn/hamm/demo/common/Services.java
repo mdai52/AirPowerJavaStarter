@@ -1,15 +1,18 @@
 package cn.hamm.demo.common;
 
 import cn.hamm.demo.common.config.AppConfig;
+import cn.hamm.demo.module.chat.member.MemberService;
+import cn.hamm.demo.module.chat.room.RoomService;
 import cn.hamm.demo.module.open.app.OpenAppService;
 import cn.hamm.demo.module.open.log.OpenLogService;
 import cn.hamm.demo.module.open.notify.NotifyService;
+import cn.hamm.demo.module.personnel.department.DepartmentService;
+import cn.hamm.demo.module.personnel.role.RoleService;
+import cn.hamm.demo.module.personnel.user.UserService;
 import cn.hamm.demo.module.system.coderule.CodeRuleService;
 import cn.hamm.demo.module.system.log.LogService;
 import cn.hamm.demo.module.system.menu.MenuService;
 import cn.hamm.demo.module.system.permission.PermissionService;
-import cn.hamm.demo.module.user.UserService;
-import cn.hamm.demo.module.user.role.RoleService;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -55,6 +58,15 @@ public class Services {
     @Getter
     private static CodeRuleService codeRuleService;
 
+    @Getter
+    private static RoomService roomService;
+
+    @Getter
+    private static MemberService memberService;
+
+    @Getter
+    private static DepartmentService departmentService;
+
     @Autowired
     public Services(
             Environment environment,
@@ -67,7 +79,10 @@ public class Services {
             OpenAppService openAppService,
             OpenLogService openLogService,
             NotifyService notifyService,
-            CodeRuleService codeRuleService
+            CodeRuleService codeRuleService,
+            RoomService roomService,
+            MemberService memberService,
+            DepartmentService departmentService
     ) {
         Services.environment = environment;
         Services.appConfig = appConfig;
@@ -80,5 +95,8 @@ public class Services {
         Services.openLogService = openLogService;
         Services.notifyService = notifyService;
         Services.codeRuleService = codeRuleService;
+        Services.roomService = roomService;
+        Services.memberService = memberService;
+        Services.departmentService = departmentService;
     }
 }
